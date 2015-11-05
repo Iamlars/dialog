@@ -7,9 +7,7 @@
 ;(function(window,$,undefined){
 
   var MyDialog = function(){
-    if (!(this instanceof MyDialog)) {
-        return new MyDialog();
-    }
+
     this.body = $('body');
     this.wrap = $('.my-dialog-wrap');
     this.dialog = $('.my-dialog');
@@ -31,18 +29,25 @@
     constructor: 'MyDialog',
     alert: function(option){
       var that = this;
+      var settings = that.getSettings(option);
       that.footer.html('<span type="ok" class="my-dialog-btn">确定</span>');
-      that.bulid(option);
-      that.firm();
+      that.bulid(settings);
+      that.firm(settings);
+      that.wrap.show();
+    },
+    confirm: function(option){
+      var that = this;
+      var settings = that.getSettings(option);
+      that.footer.html('<span type="cancel" class="my-dialog-btn">取消</span><span type="ok" class="my-dialog-btn">确定</span>');
+      that.bulid(settings);
+      that.firm(settings);
       that.wrap.show();
     },
     getSettings: function(option){
       return 'string' === typeof option ? $.extend({},this.settings,{inner: option}) : $.extend({},this.settings,option);
     },
-    bulid: function(option){
+    bulid: function(settings){
       var that = this;
-      var settings = that.getSettings(option);
-
       that.header.html(settings.title);
       that.inner.html(settings.inner);
       that.dialog.addClass(settings.showType);
@@ -68,13 +73,6 @@
 
       that.body.css('overflow','hidden');
 
-    },
-    confirm: function(option){
-      var that = this;
-      that.footer.html('<span type="cancel" class="my-dialog-btn">取消</span><span type="ok" class="my-dialog-btn">确定</span>');
-      that.bulid(option);
-      that.firm( that.getSettings(option) );
-      that.wrap.show();
     },
     close: function(settings){
       this.body.css('overflow','auto');
